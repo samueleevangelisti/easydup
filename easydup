@@ -2,88 +2,37 @@
 '''
 easydup
 '''
-import sys
-import json
 import click
 
-from utils import prints
 from utils import paths
 from utils import commands
-from classes.easydupconfigs import EasydupConfigs
 
 
 
 @click.command()
+@click.option('-ns', '--no-sync', 'no_sync', type=bool, default=False, show_default=True, is_flag=True, help='Disable sync from repo.')
+@click.option('-fs', '--force-sync', 'is_force_sync', type=bool, default=False, show_default=True, is_flag=True, help='Force sync from repo.')
 @click.option('-i', '--init', 'is_init', type=bool, default=False, show_default=True, is_flag=True, help='Create the base configuration file.')
 @click.option('-n', '--new', 'is_new', type=bool, default=False, show_default=True, is_flag=True, help='Create a new configuration with the selected key.')
 @click.option('-m', '--modify', 'is_modify', type=bool, default=False, show_default=True, is_flag=True, help='Modify the selected configuration.')
 @click.option('-d', '--delete', 'is_delete', type=bool, default=False, show_default=True, is_flag=True, help='Delete the selected configuration.')
-@click.option('-a', '--all', 'is_all_key', type=bool, default=False, show_default=True, is_flag=True, help='Execute all the configurations.')
-@click.option('-c', '--configs-key', 'configs_key', type=str, default='default', show_default=True, help='Select a configuration key.')
+@click.option('-ac', '--all-configs', 'is_all_configs', type=bool, default=False, show_default=True, is_flag=True, help='Execute all the configurations.')
+@click.option('-ck', '--configs-key', 'configs_key', type=str, default='default', show_default=True, help='Select a configuration key.')
+@click.option('-l', '--list', 'is_list', type=bool, default=False, show_default=True, is_flag=True, help='List the saved files.')
 @click.argument('folder-path', type=str, default='.')
-def _main(is_init, is_new, is_modify, is_delete, is_all_key, configs_key, folder_path):
+def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, is_list, folder_path):
     '''
     Create a backup using che easydup-configs.json file inside the FOLDER_PATH folder.
     You must initialize and configure the easydup-configs.json.
     '''
-    configs_path = paths.resolve_path(folder_path, 'easydup-configs.json')
-    print(f"`configs_path` is `{configs_path}`")
+    is_sync = not no_sync
 
-    if is_init:
-        with open(configs_path, 'w', encoding='utf-8') as file:
-            file.write(json.dumps({
-                'default': EasydupConfigs.prompt_create().to_dict()
-            }, indent=2))
-        sys.exit(0)
-
-    if not paths.is_entry(configs_path):
-        prints.red(f"`{configs_path}` not found")
-        sys.exit(1)
-    if paths.is_folder(configs_path):
-        prints.red(f"`{configs_path}` is not a file")
-        sys.exit(1)
-    with open(configs_path, 'r', encoding='utf-8') as file:
-        easydup_configs_dict_dict = json.loads(file.read())
-    
-    if is_new:
-        if configs_key == 'default':
-            prints.red(f"Can't create `{configs_key}` configuration")
-            sys.exit(1)
-        easydup_configs_dict_dict[configs_key] = EasydupConfigs.prompt_create().to_dict()
-        with open(configs_path, 'w', encoding='utf-8') as file:
-            file.write(json.dumps(easydup_configs_dict_dict, indent=2))
-        sys.exit(0)
-
-    if configs_key not in easydup_configs_dict_dict:
-        prints.red(f"`{configs_key}` configuration not found")
-        sys.exit(1)
-    easydup_configs = EasydupConfigs.from_dict(easydup_configs_dict_dict[configs_key])
-
-    if is_modify:
-        easydup_configs_dict_dict[configs_key] = EasydupConfigs(click.prompt('source_path', type=str, default=easydup_configs.source_path, show_default=True), click.prompt('destination_url', type=str, default=easydup_configs.destination_url, show_default=True), click.prompt('filelist_path', type=str, default=easydup_configs.filelist_path, show_default=True)).to_dict()
-        with open(configs_path, 'w', encoding='utf-8') as file:
-            file.write(json.dumps(easydup_configs_dict_dict, indent=2))
-        sys.exit(0)
-
-    if is_delete:
-        if configs_key == 'default':
-            prints.red(f"Can't delete `{configs_key}` configuration")
-            sys.exit(1)
-        del easydup_configs_dict_dict[configs_key]
-        with open(configs_path, 'w', encoding='utf-8') as file:
-            file.write(json.dumps(easydup_configs_dict_dict, indent=2))
-        sys.exit(0)
-
-    easydup_configs_list = [easydup_configs]
-    if is_all_key:
-        easydup_configs_list = [EasydupConfigs.from_dict(easydup_configs_dict) for easydup_configs_dict in easydup_configs_dict_dict.values()]
-
-    for easydup_configs in easydup_configs_list:
-
-        commands.run(f"duplicity backup --verbosity info --progress --full-if-older-than 1W --include-filelist \"{paths.resolve_path(easydup_configs.filelist_path)}\" \"{paths.resolve_path(easydup_configs.source_path)}\" \"{easydup_configs.destination_url}\"", True)
-        commands.run(f"duplicity remove-all-but-n-full 1 --force \"{easydup_configs.destination_url}\"", True)
+    if is_sync:
+        commands.run(f"python {paths.resolve_path(paths.folder_path(paths.resolve_link_path(__file__)), 'sync.py')} {is_force_sync}", True)
+    commands.run(f"python {paths.resolve_path(paths.folder_path(paths.resolve_link_path(__file__)), 'easydup.py')} {is_init} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {is_list} {folder_path}", True)
 
 
 
 if __name__ == '__main__':
+    # pylint: disable-next=no-value-for-parameter
     _main()

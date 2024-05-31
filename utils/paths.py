@@ -23,6 +23,14 @@ def resolve_path(*entry_path_list):
 
 
 
+def resolve_link_path(*entry_path_list):
+    '''
+    Resolves the input path following symbolic links
+    '''
+    return path.realpath(resolve_path(*entry_path_list))
+
+
+
 def is_absolute(*entry_path_list):
     '''
     Return true if path is absolute

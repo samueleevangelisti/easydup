@@ -26,20 +26,8 @@ def run(command_str, is_print):
 
 
 
-def nohup(command_str):
+def nohup(command_str, environment_dict):
     '''
     Runs a command in detached mode
     '''
-    command_list = command_str.split(' ')
-    index = 0
-    while '=' in command_list[index]:
-        index += 1
-    run(f"{' '.join(command_list[:index] + [''])}nohup{' '.join([''] + command_list[index:] + [''])}>/dev/null 2>/dev/null &", True)
-
-
-
-def google(url):
-    '''
-    Open a google chrome tab
-    '''
-    nohup(f"google-chrome-stable --start-maximized {url}")
+    run(f"{' '.join([f'{key}={value}' for key, value in environment_dict.items()] + [''])}nohup {command_str} >/dev/null 2>/dev/null &", True)

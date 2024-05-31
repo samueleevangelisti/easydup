@@ -1,0 +1,72 @@
+'''
+datetimes.py
+This module is from samueva97.
+Do not modify it
+'''
+from datetime import datetime
+from datetime import timezone
+
+
+
+def create(*args, **kwargs):
+    '''
+    Returns a datetime in utc
+    
+    Parameters
+    ----------
+    year : int
+        Year
+    month : int
+        Month
+    day : int
+        Day
+    hour : int
+        Hour
+    minute : int
+        Minute
+    second : int
+        Second
+    microsecond : int
+        Microsecond
+    
+    Returns
+    -------
+    datetime
+    '''
+    return datetime(*args, **kwargs, tzinfo=timezone.utc)
+
+
+
+def now():
+    '''
+    Returns actual datetime in utc
+
+    Returns
+    -------
+    datetime
+    '''
+    return datetime.now(timezone.utc)
+
+
+
+def today():
+    '''
+    Returns actual day datetime on 00:00:00
+
+    Returns
+    -------
+    datetime
+    '''
+    return now().replace(hour=0, minute=0, second=0, microsecond=0)
+
+
+
+def from_timestamp(timestamp):
+    '''
+    Returns datetime from a utc timestamp
+
+    Returns
+    -------
+    datetime
+    '''
+    return datetime.fromtimestamp(timestamp, timezone.utc)
