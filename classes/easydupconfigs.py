@@ -25,14 +25,18 @@ class EasydupConfigs:
         self.folder_path = paths.folder_path(file_path)
         self.order = order
         self.original_source_path = original_source_path
-        self.source_path = paths.resolve_path(self.folder_path, original_source_path)
+        self.source_path = paths.resolve_variables(original_source_path)
+        if not paths.is_absolute(self.source_path):
+            self.source_path = paths.resolve_path(self.folder_path, self.source_path)
         self.original_key_destination_url = original_key_destination_url
         self.key_destination_url = paths.resolve_variables(original_key_destination_url)
         self.original_data_destination_url = original_data_destination_url
         self.data_destination_url = paths.resolve_variables(original_data_destination_url)
         self.key = key
         self.original_filelist_path = original_filelist_path
-        self.filelist_path = paths.resolve_path(self.folder_path, original_filelist_path)
+        self.filelist_path = paths.resolve_variables(original_filelist_path)
+        if not paths.is_absolute(self.filelist_path):
+            self.filelist_path = paths.resolve_path(self.folder_path, self.filelist_path)
 
 
 
