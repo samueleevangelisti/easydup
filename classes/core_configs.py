@@ -1,14 +1,13 @@
 '''
-easydupcoreconfigs.py
+core_configs.py
 '''
 from datetime import datetime
-import json
 
 from utils import typechecks
 
 
 
-class EasydupCoreConfigs:
+class CoreConfigs:
     '''
     easydup core configs
     '''
@@ -39,9 +38,9 @@ class EasydupCoreConfigs:
         
         Returns
         -------
-        EasydupCoreCOnfigs
+        CoreConfigs
         '''
-        return EasydupCoreConfigs(datetime.fromisoformat(configs_dict['sync_datetime']))
+        return CoreConfigs(datetime.fromisoformat(configs_dict['sync_datetime']))
 
 
 

@@ -1,5 +1,5 @@
 '''
-easydupconfigs.py
+configs.py
 '''
 import click
 
@@ -8,7 +8,7 @@ from utils import paths
 
 
 
-class EasydupConfigs:
+class Configs:
     '''
     easydup confings
     '''
@@ -16,6 +16,24 @@ class EasydupConfigs:
 
 
     def __init__(self, file_path, order, original_source_path, original_key_destination_url, original_data_destination_url, key, original_filelist_path):
+        '''
+        Parameters
+        ----------
+        file_path : str
+            Path of the config file
+        order : int
+            Order in list when more configs are selected
+        original_source_path : str
+            Path of the source
+        original_key_destination_url : str
+            Url for key backup
+        original_data_destination_url : str
+            Url for data backup
+        key : str
+            Key for gpg encryption
+        original_filelist_path : str
+            Path of the filelist file
+        '''
         typechecks.check(file_path, str)
         typechecks.check(order, int)
         typechecks.check(original_source_path, str)
@@ -52,9 +70,9 @@ class EasydupConfigs:
 
         Returns
         -------
-        EasydupConfigs
+        Configs
         '''
-        return EasydupConfigs(file_path, click.prompt('order', type=int, default=0, show_default=True), click.prompt('source_path', type=str, default='.', show_default=True), click.prompt('key_destination_url', type=str), click.prompt('data_destination_url', type=str), click.prompt('key', type=str), click.prompt('filelist_path', type=str, default='easydup-filelist.txt', show_default=True))
+        return Configs(file_path, click.prompt('order', type=int, default=0, show_default=True), click.prompt('source_path', type=str, default='.', show_default=True), click.prompt('key_destination_url', type=str), click.prompt('data_destination_url', type=str), click.prompt('key', type=str), click.prompt('filelist_path', type=str, default='easydup-filelist.txt', show_default=True))
 
 
 
@@ -88,9 +106,9 @@ class EasydupConfigs:
         
         Returns
         -------
-        EasydupConfigs
+        Configs
         '''
-        return EasydupConfigs(file_path, configs_dict['order'], configs_dict['source_path'], configs_dict['key_destination_url'], configs_dict['data_destination_url'], configs_dict['key'], configs_dict['filelist_path'])
+        return Configs(file_path, configs_dict['order'], configs_dict['source_path'], configs_dict['key_destination_url'], configs_dict['data_destination_url'], configs_dict['key'], configs_dict['filelist_path'])
 
 
 
