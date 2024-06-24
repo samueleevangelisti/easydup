@@ -8,7 +8,7 @@ from datetime import timezone
 
 
 
-def create(*args, **kwargs):
+def create(year, month, day, hour=0, minute=0, second=0, microsecond=0):
     '''
     Returns a datetime in utc
     
@@ -33,7 +33,7 @@ def create(*args, **kwargs):
     -------
     datetime
     '''
-    return datetime(*args, **kwargs, tzinfo=timezone.utc)
+    return datetime(year, month, day, hour, minute, second, microsecond, tzinfo=timezone.utc)
 
 
 

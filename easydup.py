@@ -83,7 +83,7 @@ def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, is
         configs
     ]
     if is_all_configs:
-        configs_list = sorted([Configs.from_dict(configs_path, easydup_configs_dict) for easydup_configs_dict in configs_dict_dict.values()], lambda easydup_configs: easydup_configs.order)
+        configs_list = sorted([Configs.from_dict(configs_path, configs_dict) for configs_dict in configs_dict_dict.values()], lambda configs: configs.order)
 
     for configs in configs_list:
 
