@@ -27,11 +27,11 @@ def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_
     '''
     is_sync = not no_sync
 
-    folder_path = paths.folder_path(paths.resolve_link_path(__file__))
+    source_folder_path = paths.folder_path(paths.resolve_link_path(__file__))
 
     if is_sync:
-        commands.run(f"python {paths.resolve_path(folder_path, 'sync.py')} {is_force_sync}", True)
-    commands.run(f"python {paths.resolve_path(folder_path, 'easydup.py')} {is_init} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {is_list} {folder_path}", True)
+        commands.run(f"python {paths.resolve_path(source_folder_path, 'sync.py')} {is_force_sync}", True)
+    commands.run(f"python {paths.resolve_path(source_folder_path, 'easydup.py')} {is_init} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {is_list} {folder_path}", True)
 
 
 
