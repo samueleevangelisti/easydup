@@ -70,3 +70,22 @@ def from_timestamp(timestamp):
     datetime
     '''
     return datetime.fromtimestamp(timestamp, timezone.utc)
+
+
+
+def from_str(datetime_str, format_str):
+    '''
+    Returns datetime from string
+
+    Parameters
+    ----------
+    datetime_str : str
+        Datetime in string
+    format_str : str
+        Format string
+    
+    Returns
+    -------
+    datetime
+    '''
+    return datetime.strptime(datetime_str, format_str).replace(tzinfo=timezone.utc)

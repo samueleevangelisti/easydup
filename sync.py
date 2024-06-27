@@ -1,6 +1,7 @@
 '''
 sync.py
 '''
+import os
 import sys
 import json
 import click
@@ -34,7 +35,10 @@ def _main(is_force_sync):
 
     today_datetime = datetimes.today()
     if (core_configs.sync_datetime < today_datetime) or is_force_sync:
+        previous_working_directory = os.getcwd()
+        os.chdir(paths.folder_path(__file__))
         commands.run('git pull', True)
+        os.chdir(previous_working_directory)
         core_configs.sync_datetime = today_datetime
         with open(core_configs_path, 'w', encoding='utf-8') as file:
             file.write(json.dumps(core_configs.to_dict(), indent=2))
