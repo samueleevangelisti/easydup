@@ -19,9 +19,10 @@ from classes.configs import Configs
 @click.argument('is-delete', type=bool)
 @click.argument('is-all-configs', type=bool)
 @click.argument('configs-key', type=str)
+@click.argument('no-full', type=bool)
 @click.argument('is-list', type=bool)
 @click.argument('folder-path', type=str)
-def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, is_list, folder_path):
+def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no_full, is_list, folder_path):
     '''
     Core command. Use easydup instead
     '''
@@ -85,11 +86,13 @@ def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, is
     if is_all_configs:
         configs_list = sorted([Configs.from_dict(configs_path, configs_dict) for configs_dict in configs_dict_dict.values()], lambda configs: configs.order)
 
+    is_full = not no_full
+
     for configs in configs_list:
 
-        commands.run(f"duplicity backup --verbosity info --progress --full-if-older-than 1W \"{paths.resolve_path('$HOME/.gnupg/')}\" \"{configs.key_destination_url}\"", True)
+        commands.run(f"duplicity backup --verbosity info --progress{( '--full-if-older-than 1W' if is_full else '')} \"{paths.resolve_path('$HOME/.gnupg/')}\" \"{configs.key_destination_url}\"", True)
         commands.run(f"duplicity remove-all-but-n-full 1 --force \"{configs.key_destination_url}\"", True)
-        commands.run(f"duplicity backup --verbosity info --progress --full-if-older-than 1W --encrypt-key \"{configs.key}\" --include-filelist \"{configs.filelist_path}\" \"{configs.source_path}\" \"{configs.data_destination_url}\"", True)
+        commands.run(f"duplicity backup --verbosity info --progress{( '--full-if-older-than 1W' if is_full else '')} --encrypt-key \"{configs.key}\" --include-filelist \"{configs.filelist_path}\" \"{configs.source_path}\" \"{configs.data_destination_url}\"", True)
         commands.run(f"duplicity remove-all-but-n-full 1 --force \"{configs.data_destination_url}\"", True)
 
 

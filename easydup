@@ -18,9 +18,10 @@ from utils import commands
 @click.option('-d', '--delete', 'is_delete', type=bool, default=False, show_default=True, is_flag=True, help='Delete the selected configuration.')
 @click.option('-ac', '--all-configs', 'is_all_configs', type=bool, default=False, show_default=True, is_flag=True, help='Execute all the configurations.')
 @click.option('-ck', '--configs-key', 'configs_key', type=str, default='default', show_default=True, help='Select a configuration key.')
+@click.option('-nf', '--no-full', 'no_full', type=bool, default=False, show_default=True, is_flag=True, help='Force making an incremental backup.')
 @click.option('-l', '--list', 'is_list', type=bool, default=False, show_default=True, is_flag=True, help='List the saved files.')
 @click.argument('folder-path', type=str, default='.')
-def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, is_list, folder_path):
+def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no_full, is_list, folder_path):
     '''
     Create a backup using che easydup-configs.json file inside the FOLDER_PATH folder.
     You must initialize and configure the easydup-configs.json.
@@ -31,7 +32,7 @@ def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_
 
     if is_sync:
         commands.run(f"python {paths.resolve_path(source_folder_path, 'sync.py')} {is_force_sync}", True)
-    commands.run(f"python {paths.resolve_path(source_folder_path, 'easydup.py')} {is_init} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {is_list} {folder_path}", True)
+    commands.run(f"python {paths.resolve_path(source_folder_path, 'easydup.py')} {is_init} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {no_full} {is_list} {folder_path}", True)
 
 
 
