@@ -1,5 +1,4 @@
 '''
-commands.py
 This module is from samueva97.
 Do not modify it
 '''
@@ -18,7 +17,7 @@ def run(command_str, is_print):
     prints.blue(f" => {command_str}")
     if is_print:
         os.system(command_str)
-        return None
+        return
     subprocess_run = subprocess.run(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     stdout = subprocess_run.stdout.decode()[:-1]
     stderr = subprocess_run.stderr.decode()[:-1]

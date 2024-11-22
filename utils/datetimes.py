@@ -1,5 +1,4 @@
 '''
-datetimes.py
 This module is from samueva97.
 Do not modify it
 '''
@@ -73,19 +72,18 @@ def from_timestamp(timestamp):
 
 
 
-def from_str(datetime_str, format_str):
+def from_iso(datetime_str):
     '''
     Returns datetime from string
 
     Parameters
     ----------
     datetime_str : str
-        Datetime in string
-    format_str : str
-        Format string
+        Datetime in iso string
     
     Returns
     -------
     datetime
     '''
-    return datetime.strptime(datetime_str, format_str).replace(tzinfo=timezone.utc)
+    return_datetime = datetime.fromisoformat(datetime_str)
+    return (return_datetime.replace(tzinfo=timezone.utc) if not return_datetime.tzinfo else return_datetime)

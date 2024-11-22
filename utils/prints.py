@@ -1,5 +1,4 @@
 '''
-prints.py
 This module is from samueva97.
 Do not modify it
 '''
