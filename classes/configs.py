@@ -40,7 +40,7 @@ class Configs:
         typechecks.check(original_key_destination_url, str)
         typechecks.check(original_data_destination_url, str)
         typechecks.check(original_filelist_path, str)
-        self.folder_path = paths.folder_path(file_path)
+        self.folder_path = paths.get_folder_path(file_path)
         self.order = order
         self.original_source_path = original_source_path
         self.source_path = paths.resolve_variables(original_source_path)

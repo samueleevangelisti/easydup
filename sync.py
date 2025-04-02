@@ -20,7 +20,7 @@ def _main(is_force_sync):
     '''
     Core command. Use easydup instead
     '''
-    core_configs_path = paths.resolve_path(paths.folder_path(__file__), 'core-configs.json')
+    core_configs_path = paths.resolve_path(paths.get_folder_path(__file__), 'core-configs.json')
     print(f"core_configs_path is `{core_configs_path}`")
 
     if not paths.is_entry(core_configs_path):
@@ -36,7 +36,7 @@ def _main(is_force_sync):
     today_datetime = datetimes.today()
     if (core_configs.sync_datetime < today_datetime) or is_force_sync:
         previous_working_directory = os.getcwd()
-        os.chdir(paths.folder_path(__file__))
+        os.chdir(paths.get_folder_path(__file__))
         commands.run('git pull', True)
         os.chdir(previous_working_directory)
         core_configs.sync_datetime = today_datetime

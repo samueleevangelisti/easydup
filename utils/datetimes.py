@@ -87,3 +87,20 @@ def from_iso(datetime_str):
     '''
     return_datetime = datetime.fromisoformat(datetime_str)
     return (return_datetime.replace(tzinfo=timezone.utc) if not return_datetime.tzinfo else return_datetime)
+
+
+
+def to_javascript(actual_datetime):
+    '''
+    Returns string from datetime
+
+    Parameters
+    ----------
+    actual_datetime : datetime
+        Datetime to convert
+
+    Returns
+    -------
+    str
+    '''
+    return f"{(actual_datetime.replace(tzinfo=timezone.utc) if not actual_datetime.tzinfo else actual_datetime.astimezone(timezone.utc)).isoformat()[:23]}Z"

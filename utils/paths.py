@@ -54,7 +54,19 @@ def is_folder(*entry_path_list):
 
 
 
-def folder_path(*entry_path_list):
+def is_inside(entry_path, folder_path):
+    '''
+    Returns true if entry is inside folder
+    '''
+    absolute_folder_path = resolve_path(folder_path)
+    return path.commonpath((
+        resolve_path(entry_path),
+        absolute_folder_path,
+    )) == absolute_folder_path
+
+
+
+def get_folder_path(*entry_path_list):
     '''
     Returns the folder path
     '''
@@ -62,7 +74,7 @@ def folder_path(*entry_path_list):
 
 
 
-def file_name(*entry_path_list):
+def get_file_name(*entry_path_list):
     '''
     Returns the folder path
     '''
