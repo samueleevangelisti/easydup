@@ -103,4 +103,4 @@ def to_javascript(actual_datetime):
     -------
     str
     '''
-    return f"{(actual_datetime.replace(tzinfo=timezone.utc) if not actual_datetime.tzinfo else actual_datetime.astimezone(timezone.utc)).isoformat()[:23]}Z"
+    return (actual_datetime.replace(tzinfo=timezone.utc) if not actual_datetime.tzinfo else actual_datetime.astimezone(timezone.utc)).strftime('%Y-%m-%dT%H:%M:%S.%fZ')

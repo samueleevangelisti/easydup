@@ -13,6 +13,7 @@ from utils import commands
 @click.option('-ns', '--no-sync', 'no_sync', type=bool, default=False, show_default=True, is_flag=True, help='Disable sync from repo.')
 @click.option('-fs', '--force-sync', 'is_force_sync', type=bool, default=False, show_default=True, is_flag=True, help='Force sync from repo.')
 @click.option('-i', '--init', 'is_init', type=bool, default=False, show_default=True, is_flag=True, help='Create the base configuration file.')
+@click.option('-cm', '--configs-migration', 'is_configs_migration', type=bool, default=False, show_default=True, is_flag=True, help='Migrate the configurations to the last version.')
 @click.option('-n', '--new', 'is_new', type=bool, default=False, show_default=True, is_flag=True, help='Create a new configuration with the selected key.')
 @click.option('-m', '--modify', 'is_modify', type=bool, default=False, show_default=True, is_flag=True, help='Modify the selected configuration.')
 @click.option('-d', '--delete', 'is_delete', type=bool, default=False, show_default=True, is_flag=True, help='Delete the selected configuration.')
@@ -21,7 +22,7 @@ from utils import commands
 @click.option('-nf', '--no-full', 'no_full', type=bool, default=False, show_default=True, is_flag=True, help='Force making an incremental backup.')
 @click.option('-l', '--list', 'is_list', type=bool, default=False, show_default=True, is_flag=True, help='List the saved files.')
 @click.argument('folder-path', type=str, default='.')
-def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no_full, is_list, folder_path):
+def _main(no_sync, is_force_sync, is_init, is_configs_migration, is_new, is_modify, is_delete, is_all_configs, configs_key, no_full, is_list, folder_path):
     '''
     Create a backup using che easydup-configs.json file inside the FOLDER_PATH folder.
     You must initialize and configure the easydup-configs.json.
@@ -32,7 +33,7 @@ def _main(no_sync, is_force_sync, is_init, is_new, is_modify, is_delete, is_all_
 
     if is_sync:
         commands.run(f"python {paths.resolve_path(source_folder_path, 'sync.py')} {is_force_sync}", True)
-    commands.run(f"python {paths.resolve_path(source_folder_path, 'easydup.py')} {is_init} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {no_full} {is_list} {folder_path}", True)
+    commands.run(f"python {paths.resolve_path(source_folder_path, 'easydup.py')} {is_init} {is_configs_migration} {is_new} {is_modify} {is_delete} {is_all_configs} {configs_key} {no_full} {is_list} {folder_path}", True)
 
 
 

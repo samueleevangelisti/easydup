@@ -8,12 +8,14 @@ import click
 from utils import prints
 from utils import paths
 from utils import commands
-from classes.configs import Configs
+from utils import configs_manager
+from utils.configs_manager import ConfigsException
 
 
 
 @click.command()
 @click.argument('is-init', type=bool)
+@click.argument('is-configs-migration', type=bool)
 @click.argument('is-new', type=bool)
 @click.argument('is-modify', type=bool)
 @click.argument('is-delete', type=bool)
@@ -22,7 +24,7 @@ from classes.configs import Configs
 @click.argument('no-full', type=bool)
 @click.argument('is-list', type=bool)
 @click.argument('folder-path', type=str)
-def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no_full, is_list, folder_path):
+def _main(is_init, is_configs_migration, is_new, is_modify, is_delete, is_all_configs, configs_key, no_full, is_list, folder_path):
     '''
     Core command. Use easydup instead
     '''
@@ -32,7 +34,7 @@ def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no
     if is_init:
         with open(configs_path, 'w', encoding='utf-8') as file:
             file.write(json.dumps({
-                'default': Configs.prompt_create(configs_path).to_dict()
+                'default': configs_manager.prompt_create(configs_path).to_dict()
             }, indent=2))
         sys.exit(0)
 
@@ -42,14 +44,27 @@ def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no
     if paths.is_folder(configs_path):
         prints.red(f"`{configs_path}` is not a file")
         sys.exit(1)
+
     with open(configs_path, 'r', encoding='utf-8') as file:
         configs_dict_dict = json.loads(file.read())
+
+    if is_configs_migration:
+        for configs_key, configs_dict in configs_dict_dict.items():
+            print(f"configs_key: {configs_key}")
+            try:
+                configs_dict_dict[configs_key] = configs_manager.from_dict(configs_path, configs_dict).to_dict()
+            except ConfigsException as configs_exception:
+                prints.red(str(configs_exception))
+                sys.exit(1)
+        with open(configs_path, 'w', encoding='utf-8') as file:
+            file.write(json.dumps(configs_dict_dict, indent=2))
+        sys.exit(0)
 
     if is_new:
         if configs_key == 'default':
             prints.red(f"Can't create `{configs_key}` configuration")
             sys.exit(1)
-        configs_dict_dict[configs_key] = Configs.prompt_create(configs_path).to_dict()
+        configs_dict_dict[configs_key] = configs_manager.prompt_create(configs_path).to_dict()
         with open(configs_path, 'w', encoding='utf-8') as file:
             file.write(json.dumps(configs_dict_dict, indent=2))
         sys.exit(0)
@@ -57,7 +72,8 @@ def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no
     if configs_key not in configs_dict_dict:
         prints.red(f"`{configs_key}` configuration not found")
         sys.exit(1)
-    configs = Configs.from_dict(configs_path, configs_dict_dict[configs_key])
+
+    configs = configs_manager.from_dict(configs_path, configs_dict_dict[configs_key])
 
     if is_modify:
         configs.prompt_modify()
@@ -84,15 +100,15 @@ def _main(is_init, is_new, is_modify, is_delete, is_all_configs, configs_key, no
         configs
     ]
     if is_all_configs:
-        configs_list = sorted([Configs.from_dict(configs_path, configs_dict) for configs_dict in configs_dict_dict.values()], lambda configs: configs.order)
+        configs_list = sorted([configs_manager.from_dict(configs_path, configs_dict) for configs_dict in configs_dict_dict.values()], lambda configs: configs.order)
 
     is_full = not no_full
 
     for configs in configs_list:
 
-        commands.run(f"duplicity backup --verbosity info --progress{(' --full-if-older-than 1W' if is_full else '')} \"{paths.resolve_path('$HOME/.gnupg/')}\" \"{configs.key_destination_url}\"", True)
+        commands.run(f"duplicity backup --verbosity info --progress{(f" --full-if-older-than {configs.full_period}" if is_full else '')} \"{paths.resolve_path('$HOME/.gnupg/')}\" \"{configs.key_destination_url}\"", True)
         commands.run(f"duplicity remove-all-but-n-full 1 --force \"{configs.key_destination_url}\"", True)
-        commands.run(f"duplicity backup --verbosity info --progress{(' --full-if-older-than 1W' if is_full else '')} --encrypt-key \"{configs.key}\" --include-filelist \"{configs.filelist_path}\" \"{configs.source_path}\" \"{configs.data_destination_url}\"", True)
+        commands.run(f"duplicity backup --verbosity info --progress{(f" --full-if-older-than {configs.full_period}" if is_full else '')} --encrypt-key \"{configs.key}\" --include-filelist \"{configs.filelist_path}\" \"{configs.source_path}\" \"{configs.data_destination_url}\"", True)
         commands.run(f"duplicity remove-all-but-n-full 1 --force \"{configs.data_destination_url}\"", True)
 
 

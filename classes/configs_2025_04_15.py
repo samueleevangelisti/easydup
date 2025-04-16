@@ -1,5 +1,5 @@
 '''
-configs.py
+configs_2025_04_15.py
 '''
 import click
 
@@ -8,7 +8,7 @@ from utils import paths
 
 
 
-class Configs:
+class Configs20250415:
     '''
     easydup confings
     '''
@@ -40,6 +40,7 @@ class Configs:
         typechecks.check(original_key_destination_url, str)
         typechecks.check(original_data_destination_url, str)
         typechecks.check(original_filelist_path, str)
+        self.version = '2025-04-15'
         self.folder_path = paths.get_folder_path(file_path)
         self.order = order
         self.original_source_path = original_source_path
@@ -70,9 +71,9 @@ class Configs:
 
         Returns
         -------
-        Configs
+        Configs20250415
         '''
-        return Configs(file_path, click.prompt('order', type=int, default=0, show_default=True), click.prompt('source_path', type=str, default='.', show_default=True), click.prompt('key_destination_url', type=str), click.prompt('data_destination_url', type=str), click.prompt('key', type=str), click.prompt('filelist_path', type=str, default='easydup-filelist.txt', show_default=True))
+        return Configs20250415(file_path, click.prompt('order', type=int, default=0, show_default=True), click.prompt('source_path', type=str, default='.', show_default=True), click.prompt('key_destination_url', type=str), click.prompt('data_destination_url', type=str), click.prompt('key', type=str), click.prompt('filelist_path', type=str, default='easydup-filelist.txt', show_default=True))
 
 
 
@@ -87,6 +88,7 @@ class Configs:
         self.key_destination_url = paths.resolve_variables(self.original_key_destination_url)
         self.original_data_destination_url = click.prompt('data_destination_url', type=str, default=self.original_data_destination_url, show_default=True)
         self.data_destination_url = paths.resolve_variables(self.original_data_destination_url)
+        self.key = click.prompt('key', type=str, default=self.key, show_default=True)
         self.original_filelist_path = click.prompt('filelist_path', type=str, default=self.original_filelist_path, show_default=True)
         self.filelist_path = paths.resolve_path(self.folder_path, self.original_filelist_path)
 
@@ -106,9 +108,9 @@ class Configs:
         
         Returns
         -------
-        Configs
+        Configs20250415
         '''
-        return Configs(file_path, configs_dict['order'], configs_dict['source_path'], configs_dict['key_destination_url'], configs_dict['data_destination_url'], configs_dict['key'], configs_dict['filelist_path'])
+        return Configs20250415(file_path, configs_dict['order'], configs_dict['source_path'], configs_dict['key_destination_url'], configs_dict['data_destination_url'], configs_dict['key'], configs_dict['filelist_path'])
 
 
 
@@ -121,6 +123,7 @@ class Configs:
         dict
         '''
         return {
+            'version': self.version,
             'order': self.order,
             'source_path': self.original_source_path,
             'key_destination_url': self.original_key_destination_url,
