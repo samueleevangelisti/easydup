@@ -51,7 +51,7 @@ def migrate_configs_dict_dict(file_path, configs_dict_dict):
                     configs = Configs20250416(file_path, configs.order, configs.original_source_path, configs.original_key_destination_url, configs.original_data_destination_url, click.prompt('full_period', type=str, default='1M', show_default=True), configs.key, configs.original_filelist_path)
         if is_configs_migration:
             configs_dict_dict[configs_key] = configs.to_dict()
-        is_migration = is_migration and is_configs_migration
+        is_migration = is_migration or is_configs_migration
     if is_migration:
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(json.dumps(configs_dict_dict, indent=2))
