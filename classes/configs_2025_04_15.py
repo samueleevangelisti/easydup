@@ -15,6 +15,10 @@ class Configs20250415:
 
 
 
+    version = '2025-04-15'
+
+
+
     def __init__(self, file_path, order, original_source_path, original_key_destination_url, original_data_destination_url, key, original_filelist_path):
         '''
         Parameters
@@ -40,7 +44,6 @@ class Configs20250415:
         typechecks.check(original_key_destination_url, str)
         typechecks.check(original_data_destination_url, str)
         typechecks.check(original_filelist_path, str)
-        self.version = '2025-04-15'
         self.folder_path = paths.get_folder_path(file_path)
         self.order = order
         self.original_source_path = original_source_path
