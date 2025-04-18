@@ -79,7 +79,7 @@ class Configs20250416:
 
         Returns
         -------
-        Configs20250415
+        Configs20250416
         '''
         return Configs20250416(file_path, click.prompt('order', type=int, default=0, show_default=True), click.prompt('source_path', type=str, default='.', show_default=True), click.prompt('key_destination_url', type=str), click.prompt('data_destination_url', type=str), click.prompt('full_period', type=str, default='1M', show_default=True), click.prompt('key', type=str), click.prompt('filelist_path', type=str, default='easydup-filelist.txt', show_default=True))
 
@@ -117,7 +117,7 @@ class Configs20250416:
         
         Returns
         -------
-        Configs20250415
+        Configs20250416
         '''
         return Configs20250416(file_path, configs_dict['order'], configs_dict['source_path'], configs_dict['key_destination_url'], configs_dict['data_destination_url'], configs_dict['full_period'], configs_dict['key'], configs_dict['filelist_path'])
 
