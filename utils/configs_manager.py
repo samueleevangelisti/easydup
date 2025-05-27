@@ -9,7 +9,6 @@ from classes.configs_2025_04_16 import Configs20250416
 
 
 
-_CURRENT_VERSION = '2025-04-16'
 _CURRENT_CLASS = Configs20250416
 
 
@@ -37,16 +36,16 @@ def migrate_configs_dict_dict(file_path, configs_dict_dict):
         print(f"configs_key: {configs_key}")
         configs = None
         match configs_dict['version']:
-            case '2025-04-16':
+            case Configs20250416.version:
                 configs = Configs20250416.from_dict(file_path, configs_dict)
-            case '2025-04-15':
+            case Configs20250415.version:
                 configs = Configs20250415.from_dict(file_path, configs_dict)
             case _:
                 raise ConfigsException('`version` not valid')
         is_configs_migration = False
-        while configs.version != _CURRENT_VERSION:
+        while configs.version != _CURRENT_CLASS.version:
             match configs.version:
-                case '2025-04-15':
+                case Configs20250415.version:
                     is_configs_migration = True
                     configs = Configs20250416(file_path, configs.order, configs.original_source_path, configs.original_key_destination_url, configs.original_data_destination_url, click.prompt('full_period', type=str, default='1M', show_default=True), configs.key, configs.original_filelist_path)
         if is_configs_migration:
@@ -65,6 +64,6 @@ def prompt_create(file_path):
 
 
 def from_dict(file_path, configs_dict):
-    if configs_dict['version'] != _CURRENT_VERSION:
+    if configs_dict['version'] != _CURRENT_CLASS.version:
         raise ConfigsException('`version` is old')
     return _CURRENT_CLASS.from_dict(file_path, configs_dict)

@@ -126,7 +126,7 @@ class Configs20250415:
         dict
         '''
         return {
-            'version': self.version,
+            'version': Configs20250415.version,
             'order': self.order,
             'source_path': self.original_source_path,
             'key_destination_url': self.original_key_destination_url,
