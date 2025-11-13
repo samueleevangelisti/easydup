@@ -1,9 +1,11 @@
 '''
 easydup.py
 '''
+import os
 import sys
 import json
 import click
+import getpass
 
 from utils import prints
 from utils import paths
@@ -111,6 +113,7 @@ def _main(is_init, is_configs_migration, is_new, is_modify, is_delete, is_all_co
     for configs in configs_list:
         commands.run(f"duplicity backup --verbosity info --progress{(f" --full-if-older-than {configs.full_period}" if is_full else '')} \"{paths.resolve_path('$HOME/.gnupg/')}\" \"{configs.key_destination_url}\"", True)
         commands.run(f"duplicity remove-all-but-n-full 1 --force \"{configs.key_destination_url}\"", True)
+        os.environ['PASSPHRASE'] = getpass.getpass('passphrase: ')
         commands.run(f"duplicity backup --verbosity info --progress{(f" --full-if-older-than {configs.full_period}" if is_full else '')} --encrypt-key \"{configs.key}\" --include-filelist \"{configs.filelist_path}\" \"{configs.source_path}\" \"{configs.data_destination_url}\"", True)
         commands.run(f"duplicity remove-all-but-n-full 1 --force \"{configs.data_destination_url}\"", True)
 

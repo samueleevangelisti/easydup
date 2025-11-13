@@ -57,7 +57,6 @@ def migrate_configs_dict_dict(file_path, configs_dict_dict):
 
 
 
-
 def prompt_create(file_path):
     return _CURRENT_CLASS.prompt_create(file_path)
 

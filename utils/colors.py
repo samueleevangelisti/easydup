@@ -2,10 +2,6 @@
 This module is from samueva97.
 Do not modify it
 '''
-from utils import chars
-
-
-
 NONE = '\033[0m'
 GREY = '\033[90m'
 BLUE = '\033[94m'
@@ -18,7 +14,7 @@ RED = '\033[91m'
 
 
 def _color(text, color):
-    return f"{color}{str(text).replace(chars.NEW_LINE, f'{NONE}{chars.NEW_LINE}{color}')}{NONE}"
+    return f"{color}{str(text).replace('\n', f"{NONE}\n{color}")}{NONE}"
 
 
 

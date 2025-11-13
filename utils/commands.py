@@ -5,7 +5,6 @@ Do not modify it
 import os
 import subprocess
 
-from utils import chars
 from utils import prints
 
 
@@ -21,7 +20,7 @@ def run(command_str, is_print):
     subprocess_run = subprocess.run(command_str, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=False)
     stdout = subprocess_run.stdout.decode()[:-1]
     stderr = subprocess_run.stderr.decode()[:-1]
-    return f"{stdout or ''}{chars.NEW_LINE if stdout and stderr else ''}{stderr or ''}"
+    return f"{stdout or ''}{'\n' if stdout and stderr else ''}{stderr or ''}"
 
 
 
